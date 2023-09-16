@@ -29,6 +29,7 @@ from seleniumwire import backend, utils
 from seleniumwire.inspect import InspectRequestsMixin
 
 SELENIUM_V4 = parse_version(getattr(selenium, '__version__', '0')) >= parse_version('4.0.0')
+SELENIUM_V410 = parse_version(getattr(selenium, '__version__', '0')) >= parse_version('4.10.0')
 
 
 class DriverCommonMixin:
@@ -302,7 +303,7 @@ class Remote(InspectRequestsMixin, DriverCommonMixin, _Remote):
                 capabilities = capabilities.copy()
 
             capabilities.update(config)
-
-            kwargs['desired_capabilities'] = capabilities
-
+            if SELENIUM_V410:
+                for k,v in capabilities.items():
+                    kwargs['options'].set_capability(k,v)
         super().__init__(*args, **kwargs)
