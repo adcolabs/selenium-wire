@@ -301,12 +301,6 @@ class Remote(InspectRequestsMixin, DriverCommonMixin, _Remote):
             if capabilities is None:
                 if not SELENIUM_V410:
                     capabilities = DesiredCapabilities.FIREFOX.copy()
-            else:
-                capabilities = capabilities.copy()
-
-            capabilities.update(config)
-            if SELENIUM_V410:
-                for k,v in capabilities.items():
-                    kwargs['options'].set_capability(k,v)
+               
         
         super().__init__(*args, **kwargs)
