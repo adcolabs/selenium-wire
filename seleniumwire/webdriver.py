@@ -280,7 +280,6 @@ class Edge(InspectRequestsMixin, DriverCommonMixin, _Edge):
 
         super().__init__(*args, **kwargs)
 
-
 class Remote(InspectRequestsMixin, DriverCommonMixin, _Remote):
     """Extend the Remote webdriver to provide additional methods for inspecting requests."""
 
@@ -294,11 +293,14 @@ class Remote(InspectRequestsMixin, DriverCommonMixin, _Remote):
             seleniumwire_options = {}
 
         config = self._setup_backend(seleniumwire_options)
-
+        
         if seleniumwire_options.get('auto_config', True):
+            
             capabilities = kwargs.get('desired_capabilities')
+            
             if capabilities is None:
-                capabilities = DesiredCapabilities.FIREFOX.copy()
+                if not SELENIUM_V410:
+                    capabilities = DesiredCapabilities.FIREFOX.copy()
             else:
                 capabilities = capabilities.copy()
 
@@ -306,4 +308,5 @@ class Remote(InspectRequestsMixin, DriverCommonMixin, _Remote):
             if SELENIUM_V410:
                 for k,v in capabilities.items():
                     kwargs['options'].set_capability(k,v)
+        
         super().__init__(*args, **kwargs)
